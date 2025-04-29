@@ -1,0 +1,69 @@
+
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'com.example.voiceloop'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.example.voiceloop"
+        minSdk 29
+        targetSdk 34
+        versionCode 1
+        versionName "0.1-alpha"
+
+        externalNativeBuild {
+            cmake {
+                cppFlags "-std=c++17 -O3"
+            }
+        }
+
+        ndk {
+            abiFilters "arm64-v8a"
+        }
+    }
+
+    buildTypes {
+        debug {
+            jniDebuggable true
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path "src/main/cpp/CMakeLists.txt"
+            version "3.22.1"
+        }
+    }
+
+    packagingOptions {
+        jniLibs.keepDebugSymbols += ['**/*.so']
+    }
+}
+
+dependencies {
+    implementation 'androidx.core:core-ktx:1.13.1'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'com.google.android.material:material:1.13.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1'
+
+    // Spotify SDK (for offline control; actual audio stays in Spotify app)
+    implementation 'com.spotify.android:spotify-app-remote:0.8.0'
+
+    // SQLCipher for encrypted transcripts
+    implementation 'net.zetetic:android-database-sqlcipher:4.5.4@aar'
+
+    // ONNX runtime mobile for XTTS
+    implementation 'ai.onnxruntime:onnxruntime-mobile:1.18.1'
+
+    // Detoxify TF‑Lite model (tiny)
+    implementation 'org.tensorflow:tensorflow-lite:2.16.1'
+}
